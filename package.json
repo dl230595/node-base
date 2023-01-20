@@ -1,0 +1,24 @@
+{
+  "name": "node-sistema_gestion_municipal",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MuniSalsi/node-sistema_gestion_municipal.git"
+  },
+  "description": "Sistema de Gestion Municipal",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}
