@@ -1,10 +1,12 @@
 module.exports=
 
-
-    function agregarWorkers(arrayRegistros,name){
+    function agregarWorkers(id){
         //se importa requeridos
         const mysql = require('mysql')
         const {Worker} = require('worker_threads')
+        const { v4: uuidv4 } = require('uuid');
+        const uuid = uuidv4()
+
 
         //conexion a DB
         const connection = mysql.createConnection({
@@ -13,22 +15,22 @@ module.exports=
             password: '',
             database: 'workers'
         });
-        //se crea worker principal
-        const arrayaRegistros = arrayRegistros
-        const nombre = name
-        const value = new Worker('./app/controllers/WorkerPrincipal.js', { workerData: { arrayaRegistros: arrayaRegistros, name:name } })
-        const { [name]: constant } = { [name]: value };
         //se conecta a la BD
         connection.connect();
 
         //se limpia tabla worker_principal
-        connection.query("TRUNCATE TABLE worker_principal", function (err, result) {
+        connection.query("TRUNCATE TABLE workers", function (err, result) {
             if (err) throw err;
         });
 
+        //se crea el nombre del worker con el worker+id recibido
+        const nombre = "worker_" + id
         //se agrega woker principal a la tabla en DB
-        connection.query(`INSERT INTO worker_principal (nombre_worker,cantidad_secundarios) VALUES ('${nombre}',${arrayaRegistros.length})`, function (err, result) {
+        connection.query(`INSERT INTO workers (uuid,estado_id) VALUES ('${uuid}',1)`, function (err, result) {
             if (err) throw err;
+            //se crea worker principal
+            const value = new Worker('./app/controllers/Worker.js', { workerData: { id: id, uuid:uuid,} })
+            const { [nombre]: constant } = { [nombre]: value };
         })
 
         //se cierra conexion
